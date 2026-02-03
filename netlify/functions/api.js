@@ -12,7 +12,6 @@ exports.handler = async (event) => {
   console.log('Path:', path)
   console.log('Full URL:', url)
   console.log('Query:', event.queryStringParameters)
-  console.log('Body:', event.body)
   
   try {
     // Parse body jika ada
@@ -41,7 +40,6 @@ exports.handler = async (event) => {
     })
 
     console.log('Response Status:', response.status)
-    console.log('Response Headers:', response.headers)
     
     // Check if response is HTML (DDoS protection page)
     const contentType = response.headers['content-type'] || ''
@@ -61,7 +59,7 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: false,
           error: 'Backend protection detected',
-          message: 'The backend server has DDoS protection enabled. Please contact backend administrator.',
+          message: 'The backend server has DDoS protection enabled.',
         }),
       }
     }
@@ -74,14 +72,12 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Credentials': 'true',
       },
       body: JSON.stringify(response.data),
     }
   } catch (error) {
     console.error('=== Proxy Error ===')
     console.error('Error message:', error.message)
-    console.error('Error stack:', error.stack)
     
     if (error.response) {
       console.error('Response status:', error.response.status)
