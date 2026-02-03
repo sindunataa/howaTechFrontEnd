@@ -2,8 +2,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://howa-technology.wuaze.com/api/v1',
-  timeout: 10000,
+  baseURL: '/api',
+  timeout: 30000, // Increase timeout karena ada proxy hop
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -13,6 +13,7 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
+    console.log('Making request to:', config.baseURL + config.url)
     return config
   },
   (error) => {
@@ -23,12 +24,12 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
+    console.log('Response received:', response.data)
     return response.data
   },
   (error) => {
     console.error('API Error:', error)
     
-    // Log untuk debugging
     if (error.response) {
       console.error('Response status:', error.response.status)
       console.error('Response data:', error.response.data)
